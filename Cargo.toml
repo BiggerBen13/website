@@ -4,3 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+ascii = "1.1.0"
+comrak = "0.31.0"
+maud = "0.26.0"
+strum = "0.26.3"
+strum_macros = "0.26.4"
+tiny_http = "0.12.0"
