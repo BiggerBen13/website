@@ -12,11 +12,13 @@ jobs:
     #   matrix:
     #     target: [x86_64-unknown-linux-musl, x86_64-unknown-linux-gnu]
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@master
-      - name: Check and Compile
+      - name: install rust toolchain
         uses: dtolnay/rust-toolchain@stable
+      - name: check and compile
         run: |
+          cargo test
           cargo build --release --target-dir out
       - name: create release
         uses: softprops/action-gh-release@v2
