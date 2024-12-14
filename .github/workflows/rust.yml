@@ -22,7 +22,7 @@ jobs:
       - name: check and compile
         run: |
           cargo test
-          cargo build --release --target-dir out
+          cargo build --release --target x86_64-unknown-linux-musl --target-dir out
       - name: create release
         uses: softprops/action-gh-release@v2
         with:
