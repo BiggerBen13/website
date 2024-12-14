@@ -14,7 +14,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: add target
         run: |
-          apt-get -y install musl-tools
+          sudo apt-get -y install musl-tools
           rustup target add x86_64-unknown-linux-musl
       - name: check and compile
         run: |
