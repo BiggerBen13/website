@@ -155,7 +155,6 @@ td:nth-child(2) {
 
 /*photography stuff*/
 .photography_board {
-    margin: auto;
     /*text-align: center;*/
     display: grid;
     grid-gap: 10px;
@@ -168,7 +167,6 @@ td:nth-child(2) {
 .photography_board .image {
     overflow: hidden;
     border: 1px solid #dde1e6;
-    /*border-radius: 10px;*/
     transition: all 0.25s;
 }
 

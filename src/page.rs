@@ -6,8 +6,7 @@ use maud::{html, Markup, DOCTYPE};
 use tiny_http::Response;
 
 use crate::{
-    home,
-    util::{content, routes::Pages},
+    home, photography, util::{content, routes::Pages}
 };
 
 const CSS: &str = "style/style.css";
@@ -48,18 +47,21 @@ impl Pages {
     fn build_page(&self) -> Result<Markup, Box<dyn Error>> {
         let embed_page = match self {
             Pages::Home => home::homepage,
-            _ => todo!(),
+            //Pages::Blog => blog::blog_page,
+            Pages::Photography => photography::photography_page,
+            Pages::Github => || {html!{ meta http-equiv="Refresh" content="0, URL=https://github.com/BiggerBen13";}},
+            //_ => todo!(),
         };
 
         let markup = html! {
             (DOCTYPE)
             title {(format!("BiggerBen: {}", self))}
             link rel="stylesheet" type="text/css" href=(CSS);
-            body class="term" {
-            div {
-                (generate_navbar(self))
-                (embed_page())
-            }
+            body {
+                div class="term" {
+                    (generate_navbar(self))
+                    (embed_page())
+                }
             }
         };
         Ok(markup)
@@ -76,3 +78,4 @@ fn generate_navbar(current_page: &Pages) -> Markup {
         }
     }
 }
+

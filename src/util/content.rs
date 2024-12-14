@@ -27,7 +27,7 @@ fn get_content_type(path: &Path) -> &'static str {
         Some(e) => e,
     };
 
-    match extension.to_str().unwrap() {
+    match &extension.to_str().unwrap().to_lowercase()[0..] {
         "gif" => "image/gif",
         "jpg" => "image/jpeg",
         "jpeg" => "image/jpeg",
@@ -46,7 +46,7 @@ pub fn serve_function(
 ) -> Result<tiny_http::Response<fs::File>, Box<dyn Error>> {
     let url = &request.url()[1..];
     let path = Path::new(&url);
-    println!("{}", url);
+    // println!("{}", url);
     let file = fs::File::open(&path);
 
     match file {
