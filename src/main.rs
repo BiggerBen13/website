@@ -11,7 +11,7 @@ mod photography;
 mod util;
 
 fn main() {
-    let server = Arc::new(Server::http("0.0.0.0:8000").unwrap());
+    let server = Arc::new(Server::http("0.0.0.0:80").unwrap());
 
     let mut thread_handles = Vec::new();
 
