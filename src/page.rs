@@ -18,7 +18,7 @@ pub fn handle_request(request: tiny_http::Request) -> Result<(), Box<dyn Error>>
 
     match page {
         Ok(p) => {
-            let page: String = build_page(p)?.into_string();
+            let page: String = build_page(p).into_string();
             let response = Response::from_string(page);
             let response = response.with_header(
                 "Content-Type: text/html"
@@ -38,14 +38,14 @@ pub fn handle_request(request: tiny_http::Request) -> Result<(), Box<dyn Error>>
 }
 
 // Contructs a page from the given page enum
-fn build_page(page: Pages) -> Result<Markup, Box<dyn Error>> {
+fn build_page(page: Pages) -> Markup {
     let embed_page = match &page {
         Pages::Home => home::homepage(),
         Pages::Blog(blog) => blog::blog_page(blog.clone()),
-        Pages::Photography => photography::photography_page(),
+        Pages::Photography => photography::page(),
         Pages::Github => {
             html! { meta http-equiv="Refresh" content="0, URL=https://github.com/BiggerBen13"; }
-        },
+        }
     };
 
     let markup = html! {
@@ -59,7 +59,7 @@ fn build_page(page: Pages) -> Result<Markup, Box<dyn Error>> {
             }
         }
     };
-    Ok(markup)
+    markup
 }
 
 // Generates the NavBar

@@ -10,7 +10,7 @@ enum ContentError {
 impl Display for ContentError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ContentError::FileNotFound(s) => write!(f, "File {} not found!", s),
+            ContentError::FileNotFound(s) => write!(f, "File {s} not found!"),
         }
     }
 }
@@ -29,13 +29,10 @@ fn get_content_type(path: &Path) -> &'static str {
 
     match &extension.to_str().unwrap().to_lowercase()[0..] {
         "gif" => "image/gif",
-        "jpg" => "image/jpeg",
-        "jpeg" => "image/jpeg",
+        "jpg" | "jpeg" => "image/jpeg",
         "png" => "image/png",
         "pdf" => "application/pdf",
-        "htm" => "text/html; charset=utf8",
-        "html" => "text/html; charset=utf8",
-        "txt" => "text/plain; charset=utf8",
+        "htm" | "html" => "text/html; charset=utf8",
         "css" => "text/css; charset=utf8",
         _ => "text/plain; charset=utf8",
     }
@@ -48,14 +45,14 @@ pub fn serve_function(
     let url = &request.url()[1..];
     let path = Path::new(&url);
     // println!("{}", url);
-    let file = fs::File::open(&path);
+    let file = fs::File::open(path);
 
     match file {
         Ok(f) => {
             let response = tiny_http::Response::from_file(f);
             let response = response.with_header(tiny_http::Header {
                 field: "Content-Type".parse().unwrap(),
-                value: AsciiString::from_ascii(get_content_type(&path)).unwrap(),
+                value: AsciiString::from_ascii(get_content_type(path)).unwrap(),
             });
             Ok(response)
         }

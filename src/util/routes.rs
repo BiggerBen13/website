@@ -1,4 +1,4 @@
-#[warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all, clippy::pedantic)]
 use std::error::Error;
 use std::fmt::Display;
 use strum_macros::EnumIter;
@@ -11,7 +11,7 @@ pub enum PageErrors {
 impl Display for PageErrors {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            PageErrors::PageNotFound(e) => write!(f, "Page \"{}\" not found.", e),
+            PageErrors::PageNotFound(e) => write!(f, "Page \"{e}\" not found."),
         }
     }
 }
@@ -42,9 +42,9 @@ impl Pages {
 
     pub fn parse_route(url: &str) -> Result<Self, PageErrors> {
         println!("{url}");
-        let segments = url.split("/").collect::<Box<[&str]>>();
+        let segments = url.split('/').collect::<Box<[&str]>>();
         match *segments {
-            ["", ""] => return Ok(Pages::Home),
+            ["", ""] => Ok(Pages::Home),
             ["", route] => Ok(Self::parse_1_route(route)?),
             ["", route, subroute] => Ok(Self::parse_2_route(route, subroute)?),
 
@@ -74,7 +74,7 @@ impl Display for Pages {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Pages::Home => write!(f, "Home"),
-            Pages::Blog(p) => write!(f, "Blog {}", p.clone().unwrap_or("".to_string())),
+            Pages::Blog(p) => write!(f, "Blog {}", p.clone().unwrap_or(String::new())),
             Pages::Photography => write!(f, "Photography"),
             Pages::Github => write!(f, "Github"),
         }

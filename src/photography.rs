@@ -27,7 +27,7 @@ static PHOTO_PATHS: Lazy<Mutex<Vec<String>>> = Lazy::new(|| {
     Mutex::new(photo_paths)
 });
 
-pub fn photography_page() -> Markup {
+pub fn page() -> Markup {
     html! {
             div class="content" {
                 h1 { "Photos" }

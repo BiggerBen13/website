@@ -23,11 +23,11 @@ fn main() {
         thread_handles.push(thread::spawn(move || {
             for request in server.incoming_requests() {
                 match handle_request(request) {
-                    Ok(_) => (),
-                    Err(e) => println!("Error: {}", e.to_string()),
+                    Ok(()) => (),
+                    Err(e) => println!("Error: {e}"),
                 };
             }
-        }))
+        }));
     }
 
     for handle in thread_handles {
