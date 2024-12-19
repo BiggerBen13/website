@@ -1,4 +1,3 @@
-#![warn(clippy::all, clippy::pedantic)]
 use std::error::Error;
 use std::fmt::Display;
 use strum_macros::EnumIter;

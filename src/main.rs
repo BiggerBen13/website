@@ -1,4 +1,4 @@
-#![warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all, clippy::perf, clippy::pedantic)]
 use std::{sync::Arc, thread};
 
 use page::handle_request;

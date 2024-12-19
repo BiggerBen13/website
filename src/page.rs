@@ -16,23 +16,19 @@ const CSS: &str = "/style/style.css";
 pub fn handle_request(request: tiny_http::Request) -> Result<(), Box<dyn Error>> {
     let page = Pages::parse_route(request.url());
 
-    match page {
-        Ok(p) => {
-            let page: String = build_page(p).into_string();
-            let response = Response::from_string(page);
-            let response = response.with_header(
-                "Content-Type: text/html"
-                    .parse::<tiny_http::Header>()
-                    .unwrap(),
-            );
-            request.respond(response)?;
-            return Ok(());
-        }
-
-        Err(_) => {
-            let response = content::serve_function(&request)?;
-            request.respond(response)?;
-        }
+    if let Ok(p) = page {
+        let page: String = build_page(p).into_string();
+        let response = Response::from_string(page);
+        let response = response.with_header(
+            "Content-Type: text/html"
+                .parse::<tiny_http::Header>()
+                .unwrap(),
+        );
+        request.respond(response)?;
+        return Ok(());
+    } else {
+        let response = content::serve_function(&request)?;
+        request.respond(response)?;
     };
     Ok(())
 }
