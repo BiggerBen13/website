@@ -25,7 +25,7 @@ impl Error for PageErrors {
 #[derive(Debug, EnumIter, PartialEq, Eq)]
 pub enum Pages {
     Home,
-    Blog(String),
+    Blog(Option<String>),
     Photography,
     Github,
 }
@@ -40,7 +40,7 @@ impl Pages {
         }
     }
 
-    pub fn parse_route(url: &str) -> Result<Self, PageErrors>{
+    pub fn parse_route(url: &str) -> Result<Self, PageErrors> {
         println!("{url}");
         let segments = url.split("/").collect::<Box<[&str]>>();
         match *segments {
@@ -56,38 +56,25 @@ impl Pages {
         match route {
             "photography" => Ok(Self::Photography),
             "github" | "gh" => Ok(Self::Github),
+            "blog" => Ok(Self::Blog(None)),
             e => Err(PageErrors::PageNotFound(e.to_string())),
         }
     }
 
     fn parse_2_route(route: &str, subroute: &str) -> Result<Self, PageErrors> {
         match route {
-            "blog" => Ok(Self::Blog(subroute.to_string())),
-            _ => Err(PageErrors::PageNotFound(format!("{route}/{subroute}")))
+            "blog" => Ok(Self::Blog(Some(subroute.to_string()))),
+            _ => Err(PageErrors::PageNotFound(format!("{route}/{subroute}"))),
         }
     }
 
-    /// This function returns the page belonging to a route.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an error if the page doesn't exist.
-    pub fn get_page(route: &str) -> Result<Self, PageErrors> {
-        match route {
-            "/" => Ok(Pages::Home),
-            //"/blog" => Ok(Pages::Blog),
-            "/photography" => Ok(Pages::Photography),
-            "/github" => Ok(Pages::Github),
-            _ => Err(PageErrors::PageNotFound(route.into())),
-        }
-    }
 }
 
 impl Display for Pages {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Pages::Home => write!(f, "Home"),
-            Pages::Blog(p) => write!(f, "Blog {}", p),
+            Pages::Blog(p) => write!(f, "Blog {}", p.clone().unwrap_or("".to_string())),
             Pages::Photography => write!(f, "Photography"),
             Pages::Github => write!(f, "Github"),
         }
@@ -110,10 +97,3 @@ fn test_pages_fmt() {
 //    assert_eq!(Pages::Github.get_route(), "/github")
 //}
 
-#[test]
-fn test_get_page() {
-    assert_eq!(Pages::get_page("/").unwrap(), Pages::Home);
-    //assert_eq!(Pages::get_page("/blog").unwrap(), Pages::Blog);
-    assert_eq!(Pages::get_page("/photography").unwrap(), Pages::Photography);
-    assert_eq!(Pages::get_page("/github").unwrap(), Pages::Github);
-}

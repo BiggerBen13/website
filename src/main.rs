@@ -4,7 +4,7 @@ use std::{sync::Arc, thread};
 use page::handle_request;
 use tiny_http::Server;
 
-//mod blog;
+mod blog;
 mod home;
 mod page;
 mod photography;
