@@ -4,6 +4,7 @@
     --links-hover: #be95ff;
     --selection: #ffffff;
     --text-primary: #ffffff;
+    --border: #dde1e6;
     --background-primary: #161616;
     --background-secundary: #262626;
     /*--highlight: #161616;*/
@@ -80,7 +81,7 @@ td:nth-child(2) {
     background-color: #393939;
     margin: auto;
     text-align: center;
-    border: 1px solid #dde1e6;
+    border: 1px solid var(--border);
     /*border-radius: 10px;*/
     margin: 5px;
 
@@ -102,18 +103,8 @@ td:nth-child(2) {
     background-color: #565656;
 }
 
-.navbar .start {
-    /*border-top-left-radius: 10px;*/
-    /*border-bottom-left-radius: 10px;*/
-}
-
-.navbar .end {
-    /*border-top-right-radius: 10px;*/
-    /*border-bottom-right-radius: 10px;*/
-}
-
 .navbar a+a {
-    border-left: 2px solid #dde1e6;
+    border-left: 2px solid var(--border);
 }
 
 .navbar a:hover {
@@ -127,7 +118,7 @@ td:nth-child(2) {
     margin-left: 20%;
     margin-right: 20%;
     text-align: left;
-    border: 1px solid #f2f4f8;
+    border: 1px solid var(--border);
     /*border-radius: 15px;*/
 
     font-size: medium;
@@ -181,4 +172,28 @@ td:nth-child(2) {
     height: 100%;
     width: 100%;
     object-fit: cover;
+}
+
+.blog_listing {
+    font-size: large;
+    display: flex;
+    flex-direction: row;
+    border: 1px solid var(--border);
+    background-color: #393939;
+    margin: 5px;
+}
+
+.blog_listing:hover {
+    color: var(--links-hover);
+    background-color: #565656;
+}
+
+.blog_listing div {
+    padding: 5px;
+    width: 50%;
+    text-align: left
+}
+
+.blog_listing div+div {
+    text-align: right
 }

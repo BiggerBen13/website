@@ -10,7 +10,7 @@ use std::{
 
 use maud::PreEscaped;
 
-pub static BLOGS: LazyLock<Mutex<HashMap<String, Blog>>> = LazyLock::new(|| generage_blogs());
+pub static BLOGS: LazyLock<Mutex<HashMap<String, Blog>>> = LazyLock::new(generage_blogs);
 
 pub struct Blog {
     pub(crate) title: String,
@@ -32,22 +32,6 @@ impl Default for MetaData {
     }
 }
 
-#[derive(Debug)]
-enum FrontMatter {
-    Date(chrono::NaiveDate),
-    Title(String),
-}
-
-impl Blog {
-    fn new(title: String, date: chrono::NaiveDate, content: PreEscaped<String>) -> Self {
-        Self {
-            title,
-            date,
-            content,
-        }
-    }
-}
-
 fn generage_blogs() -> Mutex<HashMap<String, Blog>> {
     let mut blog_map = HashMap::<String, Blog>::new();
     let mut options = ComrakOptions::default();
@@ -62,7 +46,7 @@ fn generage_blogs() -> Mutex<HashMap<String, Blog>> {
         let metadata = parse_frontmatter(&get_frontmatter(root).unwrap());
         let blog = {
             let mut buf = BufWriter::new(Vec::new());
-            comrak::format_html(root, &options, &mut buf);
+            let _ = comrak::format_html(root, &options, &mut buf);
             let content = String::from_utf8(buf.into_inner().unwrap()).unwrap();
             Blog {
                 title: metadata.title,
@@ -70,7 +54,7 @@ fn generage_blogs() -> Mutex<HashMap<String, Blog>> {
                 content: PreEscaped(content),
             }
         };
-        blog_map.insert(blog.title.clone(), blog);
+        blog_map.insert(blog.title.clone().replace(' ', "-").to_lowercase(), blog);
     }
     Mutex::new(blog_map)
 }
@@ -80,16 +64,16 @@ fn parse_frontmatter(front_matter: &str) -> MetaData {
     let front_matter = front_matter.lines();
     let mut metadata = MetaData::default();
     'parse_loop: for line in front_matter {
-        let tokens = line.split(":").map(|x| x.trim()).collect::<Box<[&str]>>();
+        let tokens = line.split(':').map(str::trim).collect::<Box<[&str]>>();
         match *tokens {
             ["date", date] => {
                 let Ok(date) = chrono::NaiveDate::parse_from_str(date, "%d-%m-%Y") else {
-                    println!("unable to parse date");
+                    //println!("unable to parse date");
                     continue 'parse_loop;
                 };
-                metadata.date = date
+                metadata.date = date;
             }
-            ["title", title] => metadata.title = title.to_owned(),
+            ["title", title] => title.clone_into(&mut metadata.title),
             _ => (),
         }
     }
@@ -97,7 +81,7 @@ fn parse_frontmatter(front_matter: &str) -> MetaData {
     metadata
 }
 
-#[inline(always)]
+#[inline]
 fn get_frontmatter<'a>(root: &'a Node<'a, std::cell::RefCell<nodes::Ast>>) -> Option<String> {
     for node in root.children() {
         match node.data.clone().into_inner().value {

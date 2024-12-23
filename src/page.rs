@@ -61,7 +61,7 @@ fn generate_navbar(current_page: &Pages) -> Markup {
     let pages = [Pages::Home, Pages::Blog(None), Pages::Photography, Pages::Github];
     html! {
         div class="navbar" {
-            @for page in pages.iter() {
+            @for page in &pages {
                     a href=(page.get_route()) class=(if page == current_page { "selected" } else {""}){(page.to_string())}
             }
         }

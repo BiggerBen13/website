@@ -39,7 +39,7 @@ impl Pages {
     }
 
     pub fn parse_route(url: &str) -> Result<Self, PageErrors> {
-        println!("{url}");
+        //println!("{url}");
         let segments = url.split('/').collect::<Box<[&str]>>();
         match *segments {
             ["", ""] => Ok(Pages::Home),

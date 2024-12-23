@@ -41,7 +41,7 @@ fn get_content_type(path: &Path) -> &'static str {
 pub fn serve_function(
     request: &tiny_http::Request,
 ) -> Result<tiny_http::Response<fs::File>, Box<dyn Error>> {
-    println!("Handling request: {request:?}");
+    //println!("Handling request: {request:?}");
     let url = &request.url()[1..];
     let path = Path::new(&url);
     // println!("{}", url);
