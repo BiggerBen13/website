@@ -2,9 +2,12 @@ use std::sync::Mutex;
 
 use maud::{html, Markup};
 
-static PHOTO_PATHS: std::sync::LazyLock<Mutex<Vec<String>>> = std::sync::LazyLock::new(|| {
-    let Ok(photos) = std::fs::read_dir("photos") else {
-        return Mutex::new(Vec::<String>::new());
+use once_cell::sync::Lazy;
+
+static PHOTO_PATHS: Lazy<Mutex<Vec<String>>> = Lazy::new(|| {
+    let photos = match std::fs::read_dir("photos") {
+        Ok(s) => s,
+        Err(_) => return Mutex::new(Vec::<String>::new()),
     };
 
     let mut photo_paths: Vec<String> = Vec::<String>::new();
