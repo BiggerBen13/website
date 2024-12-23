@@ -1,7 +1,5 @@
 use std::error::Error;
 
-use strum::IntoEnumIterator;
-
 use maud::{html, Markup, DOCTYPE};
 use tiny_http::Response;
 
@@ -17,7 +15,7 @@ pub fn handle_request(request: tiny_http::Request) -> Result<(), Box<dyn Error>>
     let page = Pages::parse_route(request.url());
 
     if let Ok(p) = page {
-        let page: String = build_page(p).into_string();
+        let page: String = build_page(&p).into_string();
         let response = Response::from_string(page);
         let response = response.with_header(
             "Content-Type: text/html"
@@ -26,18 +24,18 @@ pub fn handle_request(request: tiny_http::Request) -> Result<(), Box<dyn Error>>
         );
         request.respond(response)?;
         return Ok(());
-    } else {
-        let response = content::serve_function(&request)?;
-        request.respond(response)?;
-    };
+    }
+
+    let response = content::serve_function(&request)?;
+    request.respond(response)?;
     Ok(())
 }
 
 // Contructs a page from the given page enum
-fn build_page(page: Pages) -> Markup {
+fn build_page(page: &Pages) -> Markup {
     let embed_page = match &page {
         Pages::Home => home::homepage(),
-        Pages::Blog(blog) => blog::blog_page(blog.clone()),
+        Pages::Blog(blog) => blog::page(blog.clone()),
         Pages::Photography => photography::page(),
         Pages::Github => {
             html! { meta http-equiv="Refresh" content="0, URL=https://github.com/BiggerBen13"; }
@@ -60,10 +58,11 @@ fn build_page(page: Pages) -> Markup {
 
 // Generates the NavBar
 fn generate_navbar(current_page: &Pages) -> Markup {
+    let pages = [Pages::Home, Pages::Blog(None), Pages::Photography, Pages::Github];
     html! {
         div class="navbar" {
-            @for page in Pages::iter() {
-                    a href=(page.get_route()) class=(if page == *current_page { "selected" } else {""}){(page.to_string())}
+            @for page in pages.iter() {
+                    a href=(page.get_route()) class=(if page == current_page { "selected" } else {""}){(page.to_string())}
             }
         }
     }

@@ -1,6 +1,5 @@
 use std::error::Error;
 use std::fmt::Display;
-use strum_macros::EnumIter;
 
 #[derive(Debug)]
 pub enum PageErrors {
@@ -21,7 +20,7 @@ impl Error for PageErrors {
     }
 }
 
-#[derive(Debug, EnumIter, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Pages {
     Home,
     Blog(Option<String>),
